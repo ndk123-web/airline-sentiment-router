@@ -18,8 +18,7 @@ from src.tickets.ticket_manager import (
     get_ticket_statistics,
     update_ticket_status,
     process_review_and_create_tickets,
-    create_ticket_from_issue,
-    seed_sample_tickets
+    create_ticket_from_issue
 )
 
 app = FastAPI(
@@ -36,11 +35,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Ensure sample data exists on launch
-@app.on_event("startup")
-def on_startup():
-    seed_sample_tickets()
 
 
 # -------------------------------------------------------------

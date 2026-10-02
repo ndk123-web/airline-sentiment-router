@@ -248,38 +248,11 @@ def get_ticket_statistics() -> Dict[str, Any]:
         session.close()
 
 
-def seed_sample_tickets():
-    """
-    Seeds initial demonstration tickets from common passenger reviews if database is empty.
-    """
-    session = SessionLocal()
-    try:
-        if session.query(SupportTicket).count() > 0:
-            return
-        
-        sample_reviews = [
-            ("@united Flight 4603 delayed by 7 hours and lost luggage at ORD. Terrible!", "United"),
-            ("@AmericanAir Kiosk crashed during online check-in and customer service was rude.", "American"),
-            ("@Delta Double charged for my booking reservation, please refund immediately!", "Delta"),
-            ("@SouthwestAir Broken seat and filthy cabin on flight 1102.", "Southwest"),
-            ("@USAirways Cancelled flight without notice and stranded us in Denver snowstorm.", "US Airways")
-        ]
-        for review, airline in sample_reviews:
-            process_review_and_create_tickets(review, airline_name=airline, actionable_only=True)
-    finally:
-        session.close()
-
-
 # Initialize database on module load
 init_db()
 
 
 if __name__ == "__main__":
-    seed_sample_tickets()
     stats = get_ticket_statistics()
     print("\n--- TICKET MANAGEMENT SYSTEM INITIALIZED ---")
     print("Ticket Stats:", stats)
-    tickets = list_tickets(limit=5)
-    print(f"Sample Seeded Tickets ({len(tickets)}):")
-    for t in tickets:
-        print(f"  [{t['ticket_id']}] ({t['priority']}) {t['department']} | Status: {t['status']} | {t['issue_description'][:60]}...")

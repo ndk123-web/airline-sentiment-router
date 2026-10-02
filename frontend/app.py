@@ -3,14 +3,14 @@ AirRoute AI - Interactive Web Dashboard
 Streamlit-based user interface providing Executive Analytics,
 Live Review Multi-Issue Routing & Ticket Generation, Support Ticket Operations,
 and Distributed Machine Learning / Scalability Benchmarking visualizers.
-Supports live REST API communication with FastAPI backend with local fallback.
+Clean academic aesthetic with REST API integration.
 """
 
 import os
 import sys
 from pathlib import Path
 
-# Add project root directory to sys.path to guarantee 'src' and 'backend' imports work everywhere
+# Add project root directory to sys.path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -29,8 +29,7 @@ from src.tickets.ticket_manager import (
     list_tickets,
     get_ticket_statistics,
     update_ticket_status,
-    process_review_and_create_tickets,
-    seed_sample_tickets
+    process_review_and_create_tickets
 )
 
 FASTAPI_BASE_URL = os.environ.get("FASTAPI_URL", "http://127.0.0.1:8000")
@@ -38,65 +37,65 @@ FASTAPI_BASE_URL = os.environ.get("FASTAPI_URL", "http://127.0.0.1:8000")
 # Set page configuration
 st.set_page_config(
     page_title="AirRoute AI - Scalable Sentiment & Ticket Routing",
-    page_icon="✈️",
+    page_icon="✈",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom Styling
+# Custom Styling (Professional Academic Theme)
 st.markdown("""
 <style>
     .main-header {
-        font-size: 2.2rem;
+        font-size: 2.1rem;
         font-weight: 700;
-        background: linear-gradient(90deg, #1E88E5 0%, #004BA0 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: light;
+        letter-spacing: -0.02em;
         margin-bottom: 0.2rem;
     }
     .sub-header {
-        font-size: 1.05rem;
-        color: #555555;
+        font-size: 1.0rem;
+        color: #475569;
         margin-bottom: 1.5rem;
     }
     .metric-card {
-        background: #F8F9FA;
-        border-radius: 10px;
-        padding: 1.2rem;
-        border-left: 5px solid #1E88E5;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        background: #F8FAFC;
+        border-radius: 8px;
+        padding: 1.1rem;
+        border: 1px solid #E2E8F0;
+        border-left: 4px solid #2563EB;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.03);
     }
     .badge-urgent {
-        background-color: #FFEBEE;
-        color: #C62828;
-        padding: 4px 10px;
-        border-radius: 12px;
+        background-color: #FEE2E2;
+        color: #991B1B;
+        padding: 3px 8px;
+        border-radius: 6px;
         font-weight: 600;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
     .badge-high {
-        background-color: #FFF3E0;
-        color: #E65100;
-        padding: 4px 10px;
-        border-radius: 12px;
+        background-color: #FFEDD5;
+        color: #9A3412;
+        padding: 3px 8px;
+        border-radius: 6px;
         font-weight: 600;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
     .badge-medium {
-        background-color: #E3F2FD;
-        color: #1565C0;
-        padding: 4px 10px;
-        border-radius: 12px;
+        background-color: #E0E7FF;
+        color: #3730A3;
+        padding: 3px 8px;
+        border-radius: 6px;
         font-weight: 600;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
     .badge-low {
-        background-color: #E8F5E9;
-        color: #2E7D32;
-        padding: 4px 10px;
-        border-radius: 12px;
+        background-color: #DCFCE7;
+        color: #166534;
+        padding: 3px 8px;
+        border-radius: 6px;
         font-weight: 600;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -198,28 +197,27 @@ def load_scalability_results():
 
 
 # Sidebar Navigation
-st.sidebar.image("https://img.icons8.com/clouds/200/airport.png", width=120)
 st.sidebar.title("AirRoute AI")
 st.sidebar.caption("Scalable ML & Big Data Analytics")
 
 # Connection Mode Badge in Sidebar
 if API_ONLINE:
-    st.sidebar.success("🟢 FastAPI Backend: Connected (HTTP REST)")
+    st.sidebar.success("FastAPI Backend: Connected (HTTP REST)")
 else:
-    st.sidebar.info("🔵 FastAPI Backend: Offline (Running Direct Local Mode)")
+    st.sidebar.info("FastAPI Backend: Offline (Direct Local Mode)")
 
 nav_selection = st.sidebar.radio(
     "Navigation Modules",
     [
-        "📊 Executive Overview & Analytics",
-        "🎯 Live Multi-Issue Review Router",
-        "🎫 Support Ticket Operations Center",
-        "⚡ Distributed ML & Scalability Benchmarks"
+        "Executive Overview & Analytics",
+        "Live Multi-Issue Review Router",
+        "Support Ticket Operations Center",
+        "Distributed ML & Scalability Benchmarks"
     ]
 )
 
 st.sidebar.markdown("---")
-st.sidebar.markdown("**Course Modules Demonstrated:**")
+st.sidebar.markdown("**Course Modules:**")
 st.sidebar.markdown("- **Module 1**: PySpark ETL & Parquet")
 st.sidebar.markdown("- **Module 2**: Spark MLlib Distributed ML")
 st.sidebar.markdown("- **Module 3**: TF-IDF & NLP Feature Engineering")
@@ -230,9 +228,9 @@ st.sidebar.markdown("- **Module 6**: Scalability Benchmarking")
 # ==============================================================================
 # 1. EXECUTIVE OVERVIEW & ANALYTICS
 # ==============================================================================
-if nav_selection == "📊 Executive Overview & Analytics":
-    st.markdown('<div class="main-header">✈️ Executive Overview & Big Data Analytics</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">Real-time telemetry and exploratory analytics across 14,640 airline passenger reviews processed via Apache PySpark.</div>', unsafe_allow_html=True)
+if nav_selection == "Executive Overview & Analytics":
+    st.markdown('<div class="main-header">Executive Overview & Big Data Analytics</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">Telemetry and exploratory analytics across 14,640 airline passenger reviews processed via Apache PySpark.</div>', unsafe_allow_html=True)
 
     df = load_processed_data()
     ticket_stats = get_ticket_statistics()
@@ -243,8 +241,8 @@ if nav_selection == "📊 Executive Overview & Analytics":
         # KPI Row
         kpi1, kpi2, kpi3, kpi4, kpi5 = st.columns(5)
         kpi1.metric("Total Reviews Processed", f"{len(df):,}", "PySpark Ingestion")
-        kpi2.metric("Negative Sentiment", f"{(df['airline_sentiment'] == 'negative').mean()*100:.1f}%", "-62.7% Dominant")
-        kpi3.metric("Positive Sentiment", f"{(df['airline_sentiment'] == 'positive').mean()*100:.1f}%", "+16.1%")
+        kpi2.metric("Negative Sentiment", f"{(df['airline_sentiment'] == 'negative').mean()*100:.1f}%", "62.7% Dominant")
+        kpi3.metric("Positive Sentiment", f"{(df['airline_sentiment'] == 'positive').mean()*100:.1f}%", "16.1%")
         kpi4.metric("Active Support Tickets", f"{ticket_stats.get('open_tickets', 0)}", "Open / In Progress")
         kpi5.metric("Parquet Storage Size", "2.07 MB", "39.4% Compression")
 
@@ -265,9 +263,9 @@ if nav_selection == "📊 Executive Overview & Analytics":
                 hole=0.45,
                 color="Sentiment",
                 color_discrete_map={
-                    "negative": "#E53935",
-                    "neutral": "#FB8C00",
-                    "positive": "#43A047"
+                    "negative": "#DC2626",
+                    "neutral": "#D97706",
+                    "positive": "#16A34A"
                 }
             )
             fig_sentiment.update_traces(textposition="inside", textinfo="percent+label")
@@ -286,9 +284,9 @@ if nav_selection == "📊 Executive Overview & Analytics":
                 color="airline_sentiment",
                 barmode="stack",
                 color_discrete_map={
-                    "negative": "#E53935",
-                    "neutral": "#FB8C00",
-                    "positive": "#43A047"
+                    "negative": "#DC2626",
+                    "neutral": "#D97706",
+                    "positive": "#16A34A"
                 },
                 labels={airline_col: "Airline", "Count": "Number of Reviews"}
             )
@@ -316,7 +314,7 @@ if nav_selection == "📊 Executive Overview & Analytics":
             st.plotly_chart(fig_reasons, use_container_width=True)
 
         # Review Explorer
-        with st.expander("🔍 Interactive Processed Dataset Explorer", expanded=False):
+        with st.expander("Interactive Processed Dataset Explorer", expanded=False):
             search_query = st.text_input("Filter reviews by keyword:", placeholder="e.g. luggage, delayed, refund, rude...")
             display_df = df
             if search_query:
@@ -331,8 +329,8 @@ if nav_selection == "📊 Executive Overview & Analytics":
 # ==============================================================================
 # 2. LIVE REVIEW ANALYZER & MULTI-ISSUE ROUTER
 # ==============================================================================
-elif nav_selection == "🎯 Live Multi-Issue Review Router":
-    st.markdown('<div class="main-header">🎯 Live Multi-Issue Review Routing Engine</div>', unsafe_allow_html=True)
+elif nav_selection == "Live Multi-Issue Review Router":
+    st.markdown('<div class="main-header">Live Multi-Issue Review Routing Engine</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">Deconstructs compound passenger reviews into grammatical sub-clauses, assigns issue-level sentiment and priority, and generates support tickets.</div>', unsafe_allow_html=True)
 
     col1, col2 = st.columns([1.3, 1])
@@ -342,7 +340,7 @@ elif nav_selection == "🎯 Live Multi-Issue Review Router":
         
         # Sample prompt selector
         sample_choice = st.selectbox(
-            "Select an illustrative sample review or enter your own below:",
+            "Select an illustrative sample review or enter custom text below:",
             [
                 "Custom Review",
                 "Compound Review: Delayed flight, lost luggage, but great crew",
@@ -379,14 +377,14 @@ elif nav_selection == "🎯 Live Multi-Issue Review Router":
         default_text = sample_texts.get(sample_choice, ("@united Flight was delayed 3 hours and no one answered at the desk.", "United"))[0]
         default_airline = sample_texts.get(sample_choice, ("...", "United"))[1]
 
-        review_input = st.text_area("Passenger Review Text:", value=default_text, height=130)
+        review_input = st.text_area("Passenger Review Text:", value=default_text, height=120)
         airline_selected = st.selectbox("Target Airline:", ["United", "American", "Delta", "Southwest", "US Airways", "Virgin America", "Other"], index=0)
         auto_ticket = st.checkbox("Automatically create support tickets in DB for actionable complaints", value=True)
 
-        analyze_btn = st.button("🚀 Analyze & Route Review", type="primary", use_container_width=True)
+        analyze_btn = st.button("Analyze & Route Review", type="primary", use_container_width=True)
 
     with col2:
-        st.subheader("Real-Time Prediction Summary")
+        st.subheader("Prediction Summary")
         
         if analyze_btn or review_input:
             # Use REST API function (with graceful local fallback)
@@ -401,14 +399,13 @@ elif nav_selection == "🎯 Live Multi-Issue Review Router":
             probs = analysis["probabilities"]
 
             # Sentiment Box
-            sent_color = "#E53935" if sent == "negative" else "#FB8C00" if sent == "neutral" else "#43A047"
-            sent_emoji = "😡" if sent == "negative" else "😐" if sent == "neutral" else "😊"
+            sent_color = "#DC2626" if sent == "negative" else "#D97706" if sent == "neutral" else "#16A34A"
 
             st.markdown(
                 f"""
-                <div style="background-color: {sent_color}15; border-left: 6px solid {sent_color}; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                    <h3 style="color: {sent_color}; margin: 0;">{sent_emoji} Predicted Sentiment: {sent.upper()}</h3>
-                    <p style="margin: 0.3rem 0 0 0; font-size: 0.95rem;">Model Confidence: <b>{conf*100:.1f}%</b> | Total Extracted Issues: <b>{analysis['total_issues_detected']}</b></p>
+                <div style="background-color: {sent_color}10; border-left: 5px solid {sent_color}; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                    <h4 style="color: {sent_color}; margin: 0;">Predicted Sentiment: {sent.upper()}</h4>
+                    <p style="margin: 0.3rem 0 0 0; font-size: 0.9rem; color: #334155;">Model Confidence: <b>{conf*100:.1f}%</b> | Total Extracted Issues: <b>{analysis['total_issues_detected']}</b></p>
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -426,16 +423,16 @@ elif nav_selection == "🎯 Live Multi-Issue Review Router":
                 y="Sentiment",
                 orientation="h",
                 color="Sentiment",
-                color_discrete_map={"Negative": "#E53935", "Neutral": "#FB8C00", "Positive": "#43A047"},
+                color_discrete_map={"Negative": "#DC2626", "Neutral": "#D97706", "Positive": "#16A34A"},
                 text=prob_df["Probability"].apply(lambda x: f"{x*100:.1f}%")
             )
-            fig_prob.update_layout(xaxis_range=[0, 1], height=180, margin=dict(t=10, b=10, l=10, r=10), showlegend=False)
+            fig_prob.update_layout(xaxis_range=[0, 1], height=170, margin=dict(t=5, b=5, l=5, r=5), showlegend=False)
             st.plotly_chart(fig_prob, use_container_width=True)
 
     # Detailed Sub-Clause Breakdown
     if analyze_btn or review_input:
         st.markdown("---")
-        st.subheader("🧩 Multi-Issue Clause Decomposition & Department Mapping")
+        st.subheader("Multi-Issue Clause Decomposition & Department Mapping")
         
         issues = analysis.get("extracted_issues", [])
         if not issues:
@@ -450,15 +447,15 @@ elif nav_selection == "🎯 Live Multi-Issue Review Router":
                     st.markdown(
                         f"""
                         <div class="metric-card">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <span style="font-weight: 700; color: #1E88E5;">🏢 {issue['department']}</span>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                <span style="font-weight: 700; color: #1E40AF;">{issue['department']}</span>
                                 <span class="{p_class}">{issue['priority']}</span>
                             </div>
-                            <p style="font-size: 0.95rem; color: #222; font-style: italic; margin-bottom: 8px;">"{issue['issue_description']}"</p>
-                            <div style="font-size: 0.8rem; color: #666;">
+                            <p style="font-size: 0.9rem; color: #1E293B; font-style: italic; margin-bottom: 6px;">"{issue['issue_description']}"</p>
+                            <div style="font-size: 0.8rem; color: #64748B;">
                                 <b>Sentiment:</b> {issue['sentiment'].title()}<br/>
-                                <b>Actionable Complaint:</b> {'Yes ⚠️' if issue['is_actionable'] else 'No (Compliment/Info) ✅'}<br/>
-                                <b>Matched Signals:</b> <code>{', '.join(issue['matched_keywords'])}</code>
+                                <b>Actionable Complaint:</b> {'Yes' if issue['is_actionable'] else 'No (Compliment/Info)'}<br/>
+                                <b>Matched Keywords:</b> <code>{', '.join(issue['matched_keywords'])}</code>
                             </div>
                         </div>
                         """,
@@ -466,17 +463,16 @@ elif nav_selection == "🎯 Live Multi-Issue Review Router":
                     )
             
             if auto_ticket and analyze_btn and analysis.get("generated_tickets"):
-                st.success(f"✅ Generated {len(analysis['generated_tickets'])} support ticket(s) in the database via REST API! View them in the Support Ticket Operations Center.")
+                st.success(f"Generated {len(analysis['generated_tickets'])} support ticket(s) in the database via REST API! View them in the Support Ticket Operations Center.")
 
 
 # ==============================================================================
 # 3. SUPPORT TICKET OPERATIONS CENTER
 # ==============================================================================
-elif nav_selection == "🎫 Support Ticket Operations Center":
-    st.markdown('<div class="main-header">🎫 Airline Support Ticket Operations Center</div>', unsafe_allow_html=True)
+elif nav_selection == "Support Ticket Operations Center":
+    st.markdown('<div class="main-header">Airline Support Ticket Operations Center</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">Manage actionable passenger complaint tickets generated by the intelligent routing pipeline. Track ticket lifecycle from Open to Resolved.</div>', unsafe_allow_html=True)
 
-    seed_sample_tickets()
     ticket_stats = get_ticket_statistics()
 
     # KPI Row
@@ -512,7 +508,7 @@ elif nav_selection == "🎫 Support Ticket Operations Center":
     )
 
     if not tickets:
-        st.info("No tickets found matching the selected criteria.")
+        st.info("No tickets currently exist in the database. Submit an actionable passenger review from the 'Live Multi-Issue Review Router' page to create real support tickets.")
     else:
         df_tickets = pd.DataFrame(tickets)
         
@@ -520,11 +516,11 @@ elif nav_selection == "🎫 Support Ticket Operations Center":
         st.dataframe(
             df_tickets[["ticket_id", "priority", "department", "status", "airline", "issue_description", "created_at", "resolution_notes"]],
             use_container_width=True,
-            height=300
+            height=280
         )
 
         st.markdown("---")
-        st.subheader("🛠️ Update Ticket Status & Resolution Notes")
+        st.subheader("Update Ticket Status & Resolution Notes")
 
         u_col1, u_col2, u_col3 = st.columns([1, 1, 2])
         with u_col1:
@@ -534,7 +530,7 @@ elif nav_selection == "🎫 Support Ticket Operations Center":
         with u_col3:
             res_notes = st.text_input("Resolution / Operational Notes:", placeholder="e.g. Passenger contacted, luggage delivered to gate...")
 
-        if st.button("💾 Commit Ticket Update", type="primary"):
+        if st.button("Commit Ticket Update", type="primary"):
             updated = api_update_ticket_status(ticket_to_update, new_status, res_notes)
             if updated:
                 st.success(f"Ticket {ticket_to_update} updated to '{new_status}' successfully!")
@@ -544,8 +540,8 @@ elif nav_selection == "🎫 Support Ticket Operations Center":
 # ==============================================================================
 # 4. SCALABILITY BENCHMARKS & DISTRIBUTED ML
 # ==============================================================================
-elif nav_selection == "⚡ Distributed ML & Scalability Benchmarks":
-    st.markdown('<div class="main-header">⚡ Scalable ML & Performance Benchmarking</div>', unsafe_allow_html=True)
+elif nav_selection == "Distributed ML & Scalability Benchmarks":
+    st.markdown('<div class="main-header">Scalable ML & Performance Benchmarking</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">Empirical comparison of Single-Machine Baseline (Scikit-Learn) vs Distributed ML (Apache Spark MLlib) across dataset scaling slices (Modules 1, 2 & 6).</div>', unsafe_allow_html=True)
 
     comp = load_comparison_metrics()
@@ -591,11 +587,11 @@ elif nav_selection == "⚡ Distributed ML & Scalability Benchmarks":
                 title="Dataset Size (Rows) vs Total Pipeline Runtime (Seconds)",
                 labels={"rows": "Number of Records", "total_runtime_seconds": "Execution Time (s)"},
                 color_discrete_map={
-                    "Scikit-Learn (Single-Node)": "#1976D2",
-                    "Apache Spark MLlib (Distributed)": "#E65100"
+                    "Scikit-Learn (Single-Node)": "#2563EB",
+                    "Apache Spark MLlib (Distributed)": "#EA580C"
                 }
             )
-            fig_runtime.update_layout(height=350, margin=dict(t=40, b=20, l=20, r=20))
+            fig_runtime.update_layout(height=340, margin=dict(t=40, b=20, l=20, r=20))
             st.plotly_chart(fig_runtime, use_container_width=True)
 
         with g_col2:
@@ -608,11 +604,11 @@ elif nav_selection == "⚡ Distributed ML & Scalability Benchmarks":
                 title="Dataset Size (Rows) vs Classification Accuracy",
                 labels={"rows": "Number of Records", "accuracy": "Accuracy"},
                 color_discrete_map={
-                    "Scikit-Learn (Single-Node)": "#1976D2",
-                    "Apache Spark MLlib (Distributed)": "#E65100"
+                    "Scikit-Learn (Single-Node)": "#2563EB",
+                    "Apache Spark MLlib (Distributed)": "#EA580C"
                 }
             )
-            fig_acc.update_layout(height=350, margin=dict(t=40, b=20, l=20, r=20), yaxis_range=[0.6, 0.85])
+            fig_acc.update_layout(height=340, margin=dict(t=40, b=20, l=20, r=20), yaxis_range=[0.6, 0.85])
             st.plotly_chart(fig_acc, use_container_width=True)
 
     # Storage Comparison
@@ -631,19 +627,19 @@ elif nav_selection == "⚡ Distributed ML & Scalability Benchmarks":
             y="Size_MB",
             color="Format",
             text=storage_df["Size_MB"].apply(lambda x: f"{x:.2f} MB"),
-            color_discrete_map={"Raw CSV": "#90A4AE", "Processed Parquet": "#00897B"},
+            color_discrete_map={"Raw CSV": "#94A3B8", "Processed Parquet": "#0D9488"},
             title="Storage Footprint Comparison"
         )
-        fig_storage.update_layout(height=280, margin=dict(t=40, b=20, l=20, r=20), showlegend=False)
+        fig_storage.update_layout(height=270, margin=dict(t=40, b=20, l=20, r=20), showlegend=False)
         st.plotly_chart(fig_storage, use_container_width=True)
 
     with s_col2:
         st.markdown("""
         ### Academic Insights for Viva & Project Presentation:
         1. **Why Parquet is Superior for Big Data Analytics:**
-           - **Columnar Storage:** Only the queried columns (e.g. `clean_text`, `label`) are read into RAM rather than entire CSV rows, drastically minimizing I/O bottlenecks.
+           - **Columnar Storage:** Only the queried columns (e.g. `clean_text`, `label`) are read into RAM rather than entire CSV rows, minimizing I/O bottlenecks.
            - **Compression Ratio:** Snappy block compression provides **39.4% disk footprint reduction**.
         2. **Why Spark Has Startup Latency on Small Datasets:**
-           - Spark's Catalyst Optimizer, DAG compilation, and JVM executor socket bindings require **~1.5-2s constant overhead**.
+           - Spark's Catalyst Optimizer, DAG compilation, and JVM executor socket bindings require **~1.5s constant overhead**.
            - Once dataset size exceeds available single-node memory (> 10-100 GB), Spark's partitioned architecture scales horizontally where single-machine Pandas runs out of memory (OOM).
         """)
