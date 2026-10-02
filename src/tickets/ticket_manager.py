@@ -218,6 +218,35 @@ def update_ticket_status(
         session.close()
 
 
+def delete_ticket(ticket_id: str) -> bool:
+    """
+    Deletes a single support ticket by its ticket_id.
+    """
+    session = SessionLocal()
+    try:
+        ticket = session.query(SupportTicket).filter(SupportTicket.ticket_id == ticket_id).first()
+        if not ticket:
+            return False
+        session.delete(ticket)
+        session.commit()
+        return True
+    finally:
+        session.close()
+
+
+def delete_all_tickets() -> int:
+    """
+    Deletes all support tickets from the database. Returns count of deleted records.
+    """
+    session = SessionLocal()
+    try:
+        deleted_count = session.query(SupportTicket).delete()
+        session.commit()
+        return deleted_count
+    finally:
+        session.close()
+
+
 def get_ticket_statistics() -> Dict[str, Any]:
     """
     Computes ticket dashboard statistics (status counts, department distribution, priority levels).
