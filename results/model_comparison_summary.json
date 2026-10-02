@@ -1,0 +1,199 @@
+{
+  "baseline_summary": {
+    "framework": "Scikit-Learn (Single-Machine Baseline)",
+    "dataset_size": 14640,
+    "train_size": 11712,
+    "test_size": 2928,
+    "timings": {
+      "data_loading_seconds": 0.1556,
+      "feature_extraction_seconds": 0.3428,
+      "lr_training_seconds": 0.2372,
+      "lr_inference_seconds": 0.0006,
+      "nb_training_seconds": 0.0018,
+      "total_lr_pipeline_seconds": 0.7356
+    },
+    "logistic_regression": {
+      "accuracy": 0.7708,
+      "weighted_precision": 0.7608,
+      "weighted_recall": 0.7708,
+      "weighted_f1_score": 0.7531,
+      "confusion_matrix": [
+        [
+          1730,
+          75,
+          30
+        ],
+        [
+          331,
+          257,
+          32
+        ],
+        [
+          132,
+          71,
+          270
+        ]
+      ],
+      "classification_report": {
+        "negative": {
+          "precision": 0.7888736890104879,
+          "recall": 0.9427792915531336,
+          "f1-score": 0.858987090367428,
+          "support": 1835.0
+        },
+        "neutral": {
+          "precision": 0.6377171215880894,
+          "recall": 0.41451612903225804,
+          "f1-score": 0.5024437927663734,
+          "support": 620.0
+        },
+        "positive": {
+          "precision": 0.8132530120481928,
+          "recall": 0.5708245243128964,
+          "f1-score": 0.6708074534161491,
+          "support": 473.0
+        },
+        "accuracy": 0.7708333333333334,
+        "macro avg": {
+          "precision": 0.7466146075489233,
+          "recall": 0.6427066482994294,
+          "f1-score": 0.6774127788499835,
+          "support": 2928.0
+        },
+        "weighted avg": {
+          "precision": 0.760804818790183,
+          "recall": 0.7708333333333334,
+          "f1-score": 0.7530902963815643,
+          "support": 2928.0
+        }
+      }
+    },
+    "naive_bayes": {
+      "accuracy": 0.75,
+      "weighted_precision": 0.7459,
+      "weighted_recall": 0.75,
+      "weighted_f1_score": 0.7177,
+      "confusion_matrix": [
+        [
+          1775,
+          39,
+          21
+        ],
+        [
+          402,
+          188,
+          30
+        ],
+        [
+          189,
+          51,
+          233
+        ]
+      ]
+    }
+  },
+  "spark_summary": {
+    "framework": "Apache Spark MLlib (Distributed ML Pipeline)",
+    "dataset_size": 14640,
+    "train_size": 11777,
+    "test_size": 2863,
+    "pipeline_stages": [
+      "Tokenizer",
+      "StopWordsRemover",
+      "HashingTF (5000 features)",
+      "IDF (Inverse Document Frequency)",
+      "LogisticRegression (maxIter=30, regParam=0.05)"
+    ],
+    "timings": {
+      "data_loading_seconds": 3.1127,
+      "model_training_seconds": 4.4826,
+      "inference_seconds": 0.5535,
+      "total_spark_pipeline_seconds": 7.5953
+    },
+    "metrics": {
+      "accuracy": 0.7255,
+      "weighted_precision": 0.7176,
+      "weighted_recall": 0.7255,
+      "weighted_f1_score": 0.7189,
+      "confusion_matrix": [
+        [
+          1534,
+          194,
+          63
+        ],
+        [
+          269,
+          279,
+          47
+        ],
+        [
+          142,
+          71,
+          264
+        ]
+      ]
+    }
+  },
+  "comparison_table": [
+    {
+      "Metric / Property": "Framework",
+      "Scikit-Learn Baseline": "Scikit-Learn (v1.7.2)",
+      "Apache Spark MLlib": "Apache Spark MLlib (v3.5.3)"
+    },
+    {
+      "Metric / Property": "Execution Paradigm",
+      "Scikit-Learn Baseline": "Single-Node (Single-Threaded RAM)",
+      "Apache Spark MLlib": "Distributed In-Memory (Partitioned DAG)"
+    },
+    {
+      "Metric / Property": "Text Representation",
+      "Scikit-Learn Baseline": "TfidfVectorizer (N-gram 1-2, 5k vocab)",
+      "Apache Spark MLlib": "Tokenizer + HashingTF (5k bins) + IDF"
+    },
+    {
+      "Metric / Property": "Accuracy",
+      "Scikit-Learn Baseline": "77.08%",
+      "Apache Spark MLlib": "72.55%"
+    },
+    {
+      "Metric / Property": "Weighted Precision",
+      "Scikit-Learn Baseline": "0.7608",
+      "Apache Spark MLlib": "0.7176"
+    },
+    {
+      "Metric / Property": "Weighted Recall",
+      "Scikit-Learn Baseline": "0.7708",
+      "Apache Spark MLlib": "0.7255"
+    },
+    {
+      "Metric / Property": "Weighted F1-Score",
+      "Scikit-Learn Baseline": "0.7531",
+      "Apache Spark MLlib": "0.7189"
+    },
+    {
+      "Metric / Property": "Data Loading Time (s)",
+      "Scikit-Learn Baseline": "0.1556 s",
+      "Apache Spark MLlib": "3.1127 s"
+    },
+    {
+      "Metric / Property": "Model Training Time (s)",
+      "Scikit-Learn Baseline": "0.2372 s",
+      "Apache Spark MLlib": "4.4826 s"
+    },
+    {
+      "Metric / Property": "Inference Time (s)",
+      "Scikit-Learn Baseline": "0.0006 s",
+      "Apache Spark MLlib": "0.5535 s"
+    },
+    {
+      "Metric / Property": "Total Pipeline Runtime (s)",
+      "Scikit-Learn Baseline": "0.7356 s",
+      "Apache Spark MLlib": "7.5953 s"
+    },
+    {
+      "Metric / Property": "Scalability Target",
+      "Scikit-Learn Baseline": "Small to Medium datasets (< 1 GB in RAM)",
+      "Apache Spark MLlib": "Big Data (> 100 GB to Terabytes, Multi-Node Clusters)"
+    }
+  ]
+}

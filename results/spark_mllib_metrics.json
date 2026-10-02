@@ -1,0 +1,42 @@
+{
+  "framework": "Apache Spark MLlib (Distributed ML Pipeline)",
+  "dataset_size": 14640,
+  "train_size": 11777,
+  "test_size": 2863,
+  "pipeline_stages": [
+    "Tokenizer",
+    "StopWordsRemover",
+    "HashingTF (5000 features)",
+    "IDF (Inverse Document Frequency)",
+    "LogisticRegression (maxIter=30, regParam=0.05)"
+  ],
+  "timings": {
+    "data_loading_seconds": 3.1127,
+    "model_training_seconds": 4.4826,
+    "inference_seconds": 0.5535,
+    "total_spark_pipeline_seconds": 7.5953
+  },
+  "metrics": {
+    "accuracy": 0.7255,
+    "weighted_precision": 0.7176,
+    "weighted_recall": 0.7255,
+    "weighted_f1_score": 0.7189,
+    "confusion_matrix": [
+      [
+        1534,
+        194,
+        63
+      ],
+      [
+        269,
+        279,
+        47
+      ],
+      [
+        142,
+        71,
+        264
+      ]
+    ]
+  }
+}

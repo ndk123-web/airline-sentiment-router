@@ -1,0 +1,93 @@
+{
+  "framework": "Scikit-Learn (Single-Machine Baseline)",
+  "dataset_size": 14640,
+  "train_size": 11712,
+  "test_size": 2928,
+  "timings": {
+    "data_loading_seconds": 0.1556,
+    "feature_extraction_seconds": 0.3428,
+    "lr_training_seconds": 0.2372,
+    "lr_inference_seconds": 0.0006,
+    "nb_training_seconds": 0.0018,
+    "total_lr_pipeline_seconds": 0.7356
+  },
+  "logistic_regression": {
+    "accuracy": 0.7708,
+    "weighted_precision": 0.7608,
+    "weighted_recall": 0.7708,
+    "weighted_f1_score": 0.7531,
+    "confusion_matrix": [
+      [
+        1730,
+        75,
+        30
+      ],
+      [
+        331,
+        257,
+        32
+      ],
+      [
+        132,
+        71,
+        270
+      ]
+    ],
+    "classification_report": {
+      "negative": {
+        "precision": 0.7888736890104879,
+        "recall": 0.9427792915531336,
+        "f1-score": 0.858987090367428,
+        "support": 1835.0
+      },
+      "neutral": {
+        "precision": 0.6377171215880894,
+        "recall": 0.41451612903225804,
+        "f1-score": 0.5024437927663734,
+        "support": 620.0
+      },
+      "positive": {
+        "precision": 0.8132530120481928,
+        "recall": 0.5708245243128964,
+        "f1-score": 0.6708074534161491,
+        "support": 473.0
+      },
+      "accuracy": 0.7708333333333334,
+      "macro avg": {
+        "precision": 0.7466146075489233,
+        "recall": 0.6427066482994294,
+        "f1-score": 0.6774127788499835,
+        "support": 2928.0
+      },
+      "weighted avg": {
+        "precision": 0.760804818790183,
+        "recall": 0.7708333333333334,
+        "f1-score": 0.7530902963815643,
+        "support": 2928.0
+      }
+    }
+  },
+  "naive_bayes": {
+    "accuracy": 0.75,
+    "weighted_precision": 0.7459,
+    "weighted_recall": 0.75,
+    "weighted_f1_score": 0.7177,
+    "confusion_matrix": [
+      [
+        1775,
+        39,
+        21
+      ],
+      [
+        402,
+        188,
+        30
+      ],
+      [
+        189,
+        51,
+        233
+      ]
+    ]
+  }
+}
