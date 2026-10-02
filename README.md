@@ -5,6 +5,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg)](https://fastapi.tiangolo.com/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.30+-FF4B4B.svg)](https://streamlit.io/)
 [![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-1.3+-F7931E.svg)](https://scikit-learn.org/)
+[![Pytest](https://img.shields.io/badge/Pytest-Passing-brightgreen.svg)](https://docs.pytest.org/)
 
 ---
 
@@ -20,13 +21,13 @@ The system processes real-world airline passenger feedback, performs distributed
 
 The project utilizes the benchmark **Twitter US Airline Sentiment Dataset** (sourced from CrowdFlower / Kaggle):
 - **Raw File Location:** `data/raw/Tweets.csv`
-- **Total Records:** 14,874 passenger tweets/reviews
+- **Total Records:** 14,640 valid passenger tweets/reviews
 - **Primary Columns:**
   - `tweet_id`: Unique identifier for each tweet/review
-  - `airline`: Target airline (e.g., *United, American, Delta, Southwest, US Airways, Virgin America*)
+  - `airline`: Target airline (*United, American, Delta, Southwest, US Airways, Virgin America*)
   - `airline_sentiment`: Ground-truth sentiment label (`positive`, `neutral`, `negative`)
   - `airline_sentiment_confidence`: Confidence score of the label annotation
-  - `negativereason`: Operational complaint category (*Late Flight, Lost Luggage, Customer Service Issue, Flight Booking Problems, Cancelled Flight, Flight Attendant Complaints, etc.*)
+  - `negativereason`: Operational complaint category (*Late Flight, Lost Luggage, Customer Service Issue, Flight Booking Problems, Cancelled Flight, etc.*)
   - `text`: Passenger review text
 
 ---
@@ -200,58 +201,74 @@ Passenger feedback frequently contains compound sentiments addressing multiple f
 
 ---
 
-## 8. Course Syllabus Alignment Matrix
+## 8. Scalability & Performance Benchmarks (Module 6 Syllabus)
+
+To empirically evaluate single-node versus distributed execution, systematic benchmarks were conducted across **10%, 25%, 50%, and 100% dataset slices** (`experiments/scalability_benchmark.py`):
+
+| Slice | Rows | Framework / Engine | Feature Extraction | Model Training | Total Runtime | Accuracy | Weighted F1 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **10%** | 1,464 | Scikit-Learn (Single-Node) | 0.0164 s | 0.0242 s | **0.0456 s** | 69.28% | 0.6275 |
+| **10%** | 1,558 | Apache Spark MLlib | Included in DAG | 3.6877 s | **4.9878 s** | 70.30% | 0.6859 |
+| **25%** | 3,660 | Scikit-Learn (Single-Node) | 0.0495 s | 0.1104 s | **0.1657 s** | 74.59% | 0.7063 |
+| **25%** | 3,761 | Apache Spark MLlib | Included in DAG | 1.1690 s | **1.5522 s** | 68.29% | 0.6691 |
+| **50%** | 7,320 | Scikit-Learn (Single-Node) | 0.0742 s | 0.1482 s | **0.2307 s** | 75.75% | 0.7307 |
+| **50%** | 7,455 | Apache Spark MLlib | Included in DAG | 1.1996 s | **1.5136 s** | 67.25% | 0.6586 |
+| **100%** | 14,640 | Scikit-Learn (Single-Node) | 0.1504 s | 0.2747 s | **0.4333 s** | 79.06% | 0.7757 |
+| **100%** | 14,640 | Apache Spark MLlib | Included in DAG | 1.3675 s | **1.7289 s** | 72.55% | 0.7189 |
+
+---
+
+## 9. FastAPI REST API & Streamlit Dashboard
+
+### FastAPI Backend Endpoints (`backend/main.py`):
+- `POST /api/predict`: Real-time sentiment prediction and multi-issue clause breakdown.
+- `GET /api/tickets`: Filterable list of support tickets (by status, department, priority, airline).
+- `PATCH /api/tickets/{ticket_id}`: Update ticket lifecycle (`Open` $\rightarrow$ `In Progress` $\rightarrow$ `Resolved` $\rightarrow$ `Closed`) and attach resolution notes.
+- `GET /api/analytics/tickets`: Summary metrics on open vs resolved tickets and departmental queues.
+- `GET /api/models/evaluation`: Comparative evaluation summary between Scikit-learn and Spark MLlib.
+
+### Streamlit Web Dashboard Modules (`frontend/app.py`):
+1. **Executive Overview & Analytics**: KPI metric cards, Plotly sentiment donut charts, airline review volume breakdown, top complaint bar charts, and dataset explorer.
+2. **Live Multi-Issue Review Router**: Real-time review analyzer with instant probability distribution and sub-clause ticket generation.
+3. **Support Ticket Operations Center**: Complete ticket management board with status update modals, priority pills, and department queue filters.
+4. **Distributed ML & Scalability Benchmarks**: Side-by-side metric comparisons, runtime curves across data sizes, and CSV vs Parquet storage efficiency visualizers.
+
+---
+
+## 10. Course Syllabus Alignment Matrix
 
 | Module | Syllabus Topic | AirRoute AI Implementation | Output / Evidence |
 | :--- | :--- | :--- | :--- |
 | **Module 1** | Big Data Foundations & Spark ETL | `src/processing/pyspark_etl.py` | PySpark ETL cleaning, null handling, CSV vs Parquet benchmarks |
-| **Module 2** | Distributed Machine Learning | `src/models/spark_mllib_pipeline.py` | Spark MLlib Pipeline (Tokenizer $\rightarrow$ HashingTF $\rightarrow$ IDF $\rightarrow$ LogReg) |
-| **Module 3** | NLP & Text Feature Engineering | `src/features/` & TF-IDF modules | Sparse feature extraction, vocabulary analysis, sentiment classification |
-| **Module 4** | Model Serving & MLOps | `backend/main.py` | FastAPI REST endpoints, ticket state machine, Swagger docs (`/docs`) |
-| **Module 5** | Advanced Topics (Mini-Experiments) | `experiments/privacy_masking.py` | PII redaction and priority scoring heuristics |
+| **Module 2** | Distributed Machine Learning | `src/models/train_spark.py` | Spark MLlib Pipeline (Tokenizer $\rightarrow$ HashingTF $\rightarrow$ IDF $\rightarrow$ LogReg) |
+| **Module 3** | NLP & Text Feature Engineering | `src/features/` & `src/routing/` | TF-IDF matrices, discourse clause segmentation, sentiment scoring |
+| **Module 4** | Model Serving & MLOps | `backend/main.py` & `src/tickets/` | FastAPI REST endpoints, ticket state machine, Swagger docs (`/docs`) |
+| **Module 5** | Advanced Topics (Heuristics) | `src/routing/router.py` | Priority scoring engine (`URGENT`, `HIGH`, `MEDIUM`, `LOW`) |
 | **Module 6** | Performance & Scalability Case Study| `experiments/scalability_benchmark.py` | Benchmark curves comparing runtime across 10%, 25%, 50%, 100% slices |
 
 ---
 
-## 6. Multi-Issue Routing & Department Mapping
-
-A single passenger review can contain multiple distinct operational issues:
-> *"My flight was delayed by four hours, my baggage was damaged, but the cabin crew was very helpful."*
-
-The **Multi-Issue Router** extracts individual clauses and routes them accordingly:
-
-| Extracted Issue Clause | Sentiment | Target Department | Default Priority |
-| :--- | :--- | :--- | :--- |
-| Flight delayed / cancelled | Negative | **Flight Operations** | High / Urgent |
-| Lost / damaged baggage | Negative | **Baggage Services** | High |
-| Booking / refund / website error | Negative | **Reservations & Ticketing** | Medium |
-| Staff behavior / assistance | Positive / Neutral | **Customer Experience** | Low |
-| Meal / seat / onboard wifi | Negative | **In-flight Services** | Medium |
-| Mobile app / check-in kiosk | Negative | **Digital Support** | Medium |
-
----
-
-## 7. Project Directory Structure
+## 11. Project Directory Structure
 
 ```text
 Passenger Review/
 ├── data/
 │   ├── raw/                       # Original raw dataset (Tweets.csv)
-│   └── processed/                 # Parquet-formatted cleaned datasets
-├── notebooks/                     # Exploratory Data Analysis & experiments
+│   ├── processed/                 # Parquet-formatted cleaned datasets
+│   └── tickets.db                 # SQLite database for support tickets
 ├── src/
-│   ├── ingestion/                 # Dataset loader and validation logic
+│   ├── ingestion/                 # Dataset loader and Windows HADOOP configuration
 │   ├── processing/                # PySpark ETL and text normalization
-│   ├── features/                  # TF-IDF feature extractors (Spark & Sklearn)
-│   ├── models/                    # Baseline (Sklearn) and Spark MLlib pipelines
+│   ├── models/                    # Baseline (Sklearn) and Spark MLlib training scripts
 │   ├── routing/                   # Multi-issue extraction & department router
 │   └── tickets/                   # Ticket lifecycle, DB schema, and CRUD
 ├── backend/                       # FastAPI REST API application
 ├── frontend/                      # Streamlit interactive web dashboard
 ├── experiments/                   # Scalability benchmarks (10%, 25%, 50%, 100%)
-├── models/                        # Serialized model artifacts & evaluation metrics
-├── results/                       # Scalability benchmark CSVs and charts
-├── tests/                         # Unit and integration test suites
+├── models/                        # Serialized model artifacts (joblib & MLlib)
+├── results/                       # Scalability benchmark CSVs, JSONs, and metrics
+├── tests/                         # Pytest test suite (100% passing)
+├── hadoop/                        # Local Windows winutils.exe and hadoop.dll
 ├── requirements.txt               # Project Python dependencies
 ├── .gitignore                     # Git ignore rules
 └── README.md                      # Comprehensive project documentation
@@ -259,56 +276,44 @@ Passenger Review/
 
 ---
 
-## 8. Quickstart & Installation Guide
+## 12. Verification & Execution Commands
 
-### Prerequisites
-- **Python:** 3.10 to 3.13
-- **Java:** Java 17 or Java 21 LTS installed and added to `PATH` (Required for PySpark)
-
-### Step 1: Clone and Set Up Environment
+### 1. Run Automated Test Suite:
 ```powershell
-# Clone the repository
-git clone https://github.com/ndk123-web/airroute-ai.git
-cd "Passenger Review"
-
-# (Optional) Activate your virtual environment
-python -m venv venv
-.\venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
+pytest tests/
 ```
 
-### Step 2: Run PySpark ETL Pipeline
+### 2. Run PySpark ETL Pipeline:
 ```powershell
 python -m src.processing.pyspark_etl
 ```
 
-### Step 3: Train Models (Baseline & Spark MLlib)
+### 3. Train Baseline & Distributed MLlib Models:
 ```powershell
 python -m src.models.train_baseline
 python -m src.models.train_spark
+python -m src.models.evaluate
 ```
 
-### Step 4: Run Scalability Experiments
+### 4. Run Scalability Experiments:
 ```powershell
 python -m experiments.scalability_benchmark
 ```
 
-### Step 5: Start FastAPI Backend
+### 5. Launch FastAPI Backend:
 ```powershell
 uvicorn backend.main:app --reload --port 8000
 ```
-*API Swagger Docs will be available at:* `http://localhost:8000/docs`
+*Swagger UI docs available at:* `http://localhost:8000/docs`
 
-### Step 6: Start Streamlit Dashboard
+### 6. Launch Streamlit Web Dashboard:
 ```powershell
 streamlit run frontend/app.py
 ```
-*Interactive Dashboard will open at:* `http://localhost:8501`
+*Interactive dashboard available at:* `http://localhost:8501`
 
 ---
 
-## 9. Academic License & Acknowledgments
+## 13. Academic License & Acknowledgments
 - Dataset provided by **CrowdFlower** via **Kaggle** under Open Data License.
 - Built for academic evaluation in **Scalable Machine Learning and Big Data Analytics**.

@@ -1,0 +1,82 @@
+[
+  {
+    "framework": "Scikit-Learn (Single-Node)",
+    "rows": 1464,
+    "slice_pct": "10%",
+    "feature_extraction_seconds": 0.0164,
+    "model_training_seconds": 0.0242,
+    "total_runtime_seconds": 0.0456,
+    "accuracy": 0.6928,
+    "weighted_f1": 0.6275
+  },
+  {
+    "framework": "Apache Spark MLlib (Distributed)",
+    "rows": 1558,
+    "slice_pct": "10%",
+    "feature_extraction_seconds": 0.0,
+    "model_training_seconds": 3.6877,
+    "total_runtime_seconds": 4.9878,
+    "accuracy": 0.703,
+    "weighted_f1": 0.6859
+  },
+  {
+    "framework": "Scikit-Learn (Single-Node)",
+    "rows": 3660,
+    "slice_pct": "25%",
+    "feature_extraction_seconds": 0.0495,
+    "model_training_seconds": 0.1104,
+    "total_runtime_seconds": 0.1657,
+    "accuracy": 0.7459,
+    "weighted_f1": 0.7063
+  },
+  {
+    "framework": "Apache Spark MLlib (Distributed)",
+    "rows": 3761,
+    "slice_pct": "25%",
+    "feature_extraction_seconds": 0.0,
+    "model_training_seconds": 1.169,
+    "total_runtime_seconds": 1.5522,
+    "accuracy": 0.6829,
+    "weighted_f1": 0.6691
+  },
+  {
+    "framework": "Scikit-Learn (Single-Node)",
+    "rows": 7320,
+    "slice_pct": "50%",
+    "feature_extraction_seconds": 0.0742,
+    "model_training_seconds": 0.1482,
+    "total_runtime_seconds": 0.2307,
+    "accuracy": 0.7575,
+    "weighted_f1": 0.7307
+  },
+  {
+    "framework": "Apache Spark MLlib (Distributed)",
+    "rows": 7455,
+    "slice_pct": "50%",
+    "feature_extraction_seconds": 0.0,
+    "model_training_seconds": 1.1996,
+    "total_runtime_seconds": 1.5136,
+    "accuracy": 0.6725,
+    "weighted_f1": 0.6586
+  },
+  {
+    "framework": "Scikit-Learn (Single-Node)",
+    "rows": 14640,
+    "slice_pct": "100%",
+    "feature_extraction_seconds": 0.1504,
+    "model_training_seconds": 0.2747,
+    "total_runtime_seconds": 0.4333,
+    "accuracy": 0.7906,
+    "weighted_f1": 0.7757
+  },
+  {
+    "framework": "Apache Spark MLlib (Distributed)",
+    "rows": 14640,
+    "slice_pct": "100%",
+    "feature_extraction_seconds": 0.0,
+    "model_training_seconds": 1.3675,
+    "total_runtime_seconds": 1.7289,
+    "accuracy": 0.7255,
+    "weighted_f1": 0.7189
+  }
+]

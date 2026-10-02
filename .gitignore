@@ -85,3 +85,4 @@ models/
 
 *.exe 
 *.parquet 
+*.db 

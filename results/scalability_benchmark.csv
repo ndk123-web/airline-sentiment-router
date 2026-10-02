@@ -1,0 +1,9 @@
+framework,rows,slice_pct,feature_extraction_seconds,model_training_seconds,total_runtime_seconds,accuracy,weighted_f1
+Scikit-Learn (Single-Node),1464,10%,0.0164,0.0242,0.0456,0.6928,0.6275
+Apache Spark MLlib (Distributed),1558,10%,0.0,3.6877,4.9878,0.703,0.6859
+Scikit-Learn (Single-Node),3660,25%,0.0495,0.1104,0.1657,0.7459,0.7063
+Apache Spark MLlib (Distributed),3761,25%,0.0,1.169,1.5522,0.6829,0.6691
+Scikit-Learn (Single-Node),7320,50%,0.0742,0.1482,0.2307,0.7575,0.7307
+Apache Spark MLlib (Distributed),7455,50%,0.0,1.1996,1.5136,0.6725,0.6586
+Scikit-Learn (Single-Node),14640,100%,0.1504,0.2747,0.4333,0.7906,0.7757
+Apache Spark MLlib (Distributed),14640,100%,0.0,1.3675,1.7289,0.7255,0.7189

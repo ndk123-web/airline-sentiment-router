@@ -111,8 +111,8 @@ def create_ticket_from_issue(
             sentiment=sentiment,
             issue_description=issue_description,
             original_review=original_review,
-            created_at=datetime.datetime.utcnow(),
-            updated_at=datetime.datetime.utcnow()
+            created_at=datetime.datetime.now(datetime.timezone.utc),
+            updated_at=datetime.datetime.now(datetime.timezone.utc)
         )
         session.add(ticket)
         session.commit()
@@ -149,8 +149,8 @@ def process_review_and_create_tickets(
                 sentiment=issue["sentiment"],
                 issue_description=issue["issue_description"],
                 original_review=review_text,
-                created_at=datetime.datetime.utcnow(),
-                updated_at=datetime.datetime.utcnow()
+                created_at=datetime.datetime.now(datetime.timezone.utc),
+                updated_at=datetime.datetime.now(datetime.timezone.utc)
             )
             session.add(tkt)
             session.commit()
@@ -207,7 +207,7 @@ def update_ticket_status(
             return None
 
         ticket.status = new_status
-        ticket.updated_at = datetime.datetime.utcnow()
+        ticket.updated_at = datetime.datetime.now(datetime.timezone.utc)
         if resolution_notes is not None:
             ticket.resolution_notes = resolution_notes
 
