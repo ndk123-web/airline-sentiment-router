@@ -418,9 +418,9 @@ elif nav_selection == "Live Multi-Issue Review Router":
                 create_tickets=(auto_ticket and analyze_btn)
             )
 
-            sent = analysis["overall_sentiment"]
-            conf = analysis["confidence"]
-            probs = analysis["probabilities"]
+            sent = analysis.get("overall_sentiment", analysis.get("sentiment", "neutral"))
+            conf = analysis.get("overall_confidence", analysis.get("confidence", 0.85))
+            probs = analysis.get("overall_probabilities", analysis.get("probabilities", {"negative": 0.33, "neutral": 0.33, "positive": 0.34}))
 
             # Sentiment Box
             sent_color = "#DC2626" if sent == "negative" else "#D97706" if sent == "neutral" else "#16A34A"
@@ -467,19 +467,35 @@ elif nav_selection == "Live Multi-Issue Review Router":
                 c = cols[idx % len(cols)]
                 p_class = f"badge-{issue['priority'].lower()}"
                 
+                # Sentiment Badge Color
+                s_color = "#DC2626" if issue['sentiment'] == "negative" else "#D97706" if issue['sentiment'] == "neutral" else "#16A34A"
+                s_bg = "#FEE2E2" if issue['sentiment'] == "negative" else "#FEF3C7" if issue['sentiment'] == "neutral" else "#DCFCE7"
+                
+                dept_conf = issue.get('department_confidence', 0.85) * 100
+                sent_conf = issue.get('sentiment_confidence', 0.85) * 100
+                
                 with c:
                     st.markdown(
                         f"""
                         <div class="metric-card">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                                <span style="font-weight: 700; color: #1E40AF;">{issue['department']}</span>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span style="font-weight: 700; color: #1E40AF; font-size: 0.95rem;">{issue['department']}</span>
                                 <span class="{p_class}">{issue['priority']}</span>
                             </div>
-                            <p style="font-size: 0.9rem; color: #1E293B; font-style: italic; margin-bottom: 6px;">"{issue['issue_description']}"</p>
-                            <div style="font-size: 0.8rem; color: #64748B;">
-                                <b>Sentiment:</b> {issue['sentiment'].title()}<br/>
-                                <b>Actionable Complaint:</b> {'Yes' if issue['is_actionable'] else 'No (Compliment/Info)'}<br/>
-                                <b>Matched Keywords:</b> <code>{', '.join(issue['matched_keywords'])}</code>
+                            <p style="font-size: 0.9rem; color: #0F172A; font-style: italic; margin-bottom: 8px; line-height: 1.3;">"{issue['issue_description']}"</p>
+                            <div style="font-size: 0.82rem; color: #475569; background: #FFFFFF; padding: 6px 8px; border-radius: 6px; border: 1px solid #E2E8F0; margin-bottom: 6px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                                    <span><b>Clause Sentiment:</b></span>
+                                    <span style="color: {s_color}; font-weight: 600; background: {s_bg}; padding: 1px 6px; border-radius: 4px;">{issue['sentiment'].title()} ({sent_conf:.1f}%)</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span><b>NLI Routing Match:</b></span>
+                                    <span style="color: #1E40AF; font-weight: 600;">{dept_conf:.1f}%</span>
+                                </div>
+                            </div>
+                            <div style="font-size: 0.75rem; color: #64748B;">
+                                <b>Actionable Complaint:</b> {'Yes (Creates Ticket) ⚠️' if issue['is_actionable'] else 'No (Compliment Logged) ✅'}<br/>
+                                <b>Engine:</b> <code>{issue.get('routing_engine', 'Zero-Shot NLI')}</code>
                             </div>
                         </div>
                         """,
@@ -487,7 +503,7 @@ elif nav_selection == "Live Multi-Issue Review Router":
                     )
             
             if auto_ticket and analyze_btn and analysis.get("generated_tickets"):
-                st.success(f"Generated {len(analysis['generated_tickets'])} support ticket(s) in the database via REST API! View them in the Support Ticket Operations Center.")
+                st.success(f"Generated {len(analysis['generated_tickets'])} support ticket(s) in database! View in the Support Ticket Operations Center.")
 
 
 # ==============================================================================
