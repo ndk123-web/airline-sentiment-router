@@ -167,6 +167,30 @@ def api_update_ticket_status(ticket_id: str, new_status: str, notes: str = None)
     return update_ticket_status(ticket_id, new_status, resolution_notes=notes)
 
 
+def api_delete_ticket(ticket_id: str):
+    if API_ONLINE:
+        try:
+            resp = requests.delete(f"{FASTAPI_BASE_URL}/api/tickets/{ticket_id}", timeout=3.0)
+            if resp.status_code == 200:
+                return True
+        except Exception:
+            pass
+    from src.tickets.ticket_manager import delete_ticket
+    return delete_ticket(ticket_id)
+
+
+def api_delete_all_tickets():
+    if API_ONLINE:
+        try:
+            resp = requests.delete(f"{FASTAPI_BASE_URL}/api/tickets", timeout=3.0)
+            if resp.status_code == 200:
+                return True
+        except Exception:
+            pass
+    from src.tickets.ticket_manager import delete_all_tickets
+    return delete_all_tickets() > 0
+
+
 # Helper data loaders
 @st.cache_data
 def load_processed_data():
@@ -530,10 +554,24 @@ elif nav_selection == "Support Ticket Operations Center":
         with u_col3:
             res_notes = st.text_input("Resolution / Operational Notes:", placeholder="e.g. Passenger contacted, luggage delivered to gate...")
 
-        if st.button("Commit Ticket Update", type="primary"):
-            updated = api_update_ticket_status(ticket_to_update, new_status, res_notes)
-            if updated:
-                st.success(f"Ticket {ticket_to_update} updated to '{new_status}' successfully!")
+        b_col1, b_col2, b_col3 = st.columns([1.2, 1.2, 2])
+        with b_col1:
+            if st.button("Commit Ticket Update", type="primary", use_container_width=True):
+                updated = api_update_ticket_status(ticket_to_update, new_status, res_notes)
+                if updated:
+                    st.success(f"Ticket {ticket_to_update} updated to '{new_status}' successfully!")
+                    st.rerun()
+
+        with b_col2:
+            if st.button("Delete Selected Ticket", type="secondary", use_container_width=True):
+                if api_delete_ticket(ticket_to_update):
+                    st.warning(f"Ticket {ticket_to_update} deleted successfully!")
+                    st.rerun()
+
+        with b_col3:
+            if st.button("Clear All Support Tickets", use_container_width=True):
+                api_delete_all_tickets()
+                st.info("All support tickets cleared.")
                 st.rerun()
 
 

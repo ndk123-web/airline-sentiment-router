@@ -143,6 +143,28 @@ def patch_ticket_status(ticket_id: str, request: TicketStatusUpdateRequest):
     return {"message": "Ticket updated successfully", "ticket": updated}
 
 
+@app.delete("/api/tickets/{ticket_id}", tags=["Ticket Management"])
+def delete_single_ticket(ticket_id: str):
+    """
+    Deletes a specific support ticket by its ticket ID.
+    """
+    from src.tickets.ticket_manager import delete_ticket
+    success = delete_ticket(ticket_id)
+    if not success:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Ticket '{ticket_id}' not found.")
+    return {"message": f"Ticket '{ticket_id}' deleted successfully"}
+
+
+@app.delete("/api/tickets", tags=["Ticket Management"])
+def delete_all_support_tickets():
+    """
+    Deletes all support tickets from the database.
+    """
+    from src.tickets.ticket_manager import delete_all_tickets
+    count = delete_all_tickets()
+    return {"message": f"Successfully deleted {count} ticket(s)."}
+
+
 @app.post("/api/tickets/create", tags=["Ticket Management"])
 def create_manual_ticket(request: ManualTicketCreateRequest):
     """
