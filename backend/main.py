@@ -1,8 +1,8 @@
 """
-AirRoute AI - FastAPI REST API Service
+AirRoute AI - Enterprise FastAPI REST API Service
 Provides RESTful endpoints for real-time review sentiment prediction,
 multi-issue intelligent department routing, support ticket management,
-and Big Data analytics & model evaluation metrics.
+multi-tenant user authentication, and enterprise analytics metrics.
 """
 
 import os
@@ -18,13 +18,16 @@ from src.tickets.ticket_manager import (
     get_ticket_statistics,
     update_ticket_status,
     process_review_and_create_tickets,
-    create_ticket_from_issue
+    create_ticket_from_issue,
+    register_user,
+    authenticate_user,
+    list_users
 )
 
 app = FastAPI(
-    title="AirRoute AI - API",
-    description="Scalable Airline Passenger Sentiment Analysis & Intelligent Review Routing System",
-    version="1.0.0"
+    title="AirRoute AI Enterprise - API",
+    description="Scalable Airline Passenger Sentiment Analysis & Multi-Tenant Intelligent Review Routing System",
+    version="2.0.0"
 )
 
 # Enable CORS for frontend integration
@@ -40,6 +43,19 @@ app.add_middleware(
 # -------------------------------------------------------------
 # Pydantic Request / Response Schemas
 # -------------------------------------------------------------
+
+class RegisterRequest(BaseModel):
+    username: str = Field(..., min_length=3, example="united_ops")
+    email: str = Field(..., example="ops@united.com")
+    password: str = Field(..., min_length=4, example="secret123")
+    airline: Optional[str] = Field("United", example="United")
+    role: Optional[str] = Field("airline_admin", example="airline_admin")
+
+
+class LoginRequest(BaseModel):
+    username_or_email: str = Field(..., example="united")
+    password: str = Field(..., example="united123")
+
 
 class ReviewAnalysisRequest(BaseModel):
     text: str = Field(..., min_length=3, example="@united My flight was delayed by 4 hours and you lost my luggage!")
@@ -62,15 +78,62 @@ class ManualTicketCreateRequest(BaseModel):
 
 
 # -------------------------------------------------------------
-# REST API Endpoints
+# Authentication Endpoints
+# -------------------------------------------------------------
+
+@app.post("/api/auth/register", tags=["Authentication"])
+def api_register(req: RegisterRequest):
+    """
+    Registers a new airline manager or administrator.
+    """
+    res = register_user(
+        username=req.username,
+        email=req.email,
+        password=req.password,
+        airline=req.airline or "United",
+        role=req.role or "airline_admin"
+    )
+    if not res.get("success"):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=res.get("error", "Registration failed.")
+        )
+    return {"message": "User registered successfully", "user": res["user"]}
+
+
+@app.post("/api/auth/login", tags=["Authentication"])
+def api_login(req: LoginRequest):
+    """
+    Authenticates an airline user or super admin.
+    """
+    user = authenticate_user(req.username_or_email, req.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid credentials. Please check your username/email and password."
+        )
+    return {"message": "Authentication successful", "user": user}
+
+
+@app.get("/api/auth/users", tags=["Authentication"])
+def api_get_users():
+    """
+    Lists registered tenant accounts (Admin only).
+    """
+    return {"users": list_users()}
+
+
+# -------------------------------------------------------------
+# System & NLP Endpoints
 # -------------------------------------------------------------
 
 @app.get("/", tags=["System"])
 def root():
     return {
-        "system": "AirRoute AI",
+        "system": "AirRoute AI Enterprise",
         "description": "Scalable Airline Passenger Sentiment Analysis & Intelligent Review Routing System",
         "status": "online",
+        "version": "2.0.0",
         "docs_url": "/docs"
     }
 
@@ -98,6 +161,10 @@ def predict_and_route(request: ReviewAnalysisRequest):
         )
     return result
 
+
+# -------------------------------------------------------------
+# Ticket Management Endpoints (Multi-Tenant)
+# -------------------------------------------------------------
 
 @app.get("/api/tickets", tags=["Ticket Management"])
 def get_tickets(
@@ -156,12 +223,12 @@ def delete_single_ticket(ticket_id: str):
 
 
 @app.delete("/api/tickets", tags=["Ticket Management"])
-def delete_all_support_tickets():
+def delete_all_support_tickets(airline: Optional[str] = Query(None, description="Delete only tickets for specified airline")):
     """
-    Deletes all support tickets from the database.
+    Deletes support tickets from the database.
     """
     from src.tickets.ticket_manager import delete_all_tickets
-    count = delete_all_tickets()
+    count = delete_all_tickets(airline=airline)
     return {"message": f"Successfully deleted {count} ticket(s)."}
 
 
@@ -182,11 +249,11 @@ def create_manual_ticket(request: ManualTicketCreateRequest):
 
 
 @app.get("/api/analytics/tickets", tags=["Analytics"])
-def get_ticket_analytics():
+def get_ticket_analytics(airline: Optional[str] = Query(None, description="Filter statistics by airline")):
     """
     Returns aggregated metrics on support tickets (status counts, priority breakdown, department distribution).
     """
-    return get_ticket_statistics()
+    return get_ticket_statistics(airline=airline)
 
 
 @app.get("/api/models/evaluation", tags=["Analytics & Scalability"])
