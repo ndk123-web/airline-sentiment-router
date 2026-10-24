@@ -313,14 +313,14 @@ if not st.session_state["authenticated"]:
                         st.error("Invalid credentials. Please verify your username and password.")
 
             st.markdown("---")
-            st.markdown("""
-            **Demo Credentials for Instant Testing:**
-            - **Super Admin:** `admin` / `admin123` *(Full access to all airlines)*
-            - **United Airlines:** `united` / `united123` *(Scoped to United only)*
-            - **Delta Air Lines:** `delta` / `delta123` *(Scoped to Delta only)*
-            - **American Airlines:** `american` / `american123` *(Scoped to American only)*
-            - **Southwest Airlines:** `southwest` / `southwest123` *(Scoped to Southwest only)*
-            """)
+            # st.markdown("""
+            # **Demo Credentials for Instant Testing:**
+            # - **Super Admin:** `admin` / `admin123` *(Full access to all airlines)*
+            # - **United Airlines:** `united` / `united123` *(Scoped to United only)*
+            # - **Delta Air Lines:** `delta` / `delta123` *(Scoped to Delta only)*
+            # - **American Airlines:** `american` / `american123` *(Scoped to American only)*
+            # - **Southwest Airlines:** `southwest` / `southwest123` *(Scoped to Southwest only)*
+            # """)
 
         # ----------------- SIGNUP TAB -----------------
         with tab_signup:
