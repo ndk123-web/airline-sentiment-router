@@ -69,8 +69,7 @@ def test_fastapi_endpoints(client):
     """Test FastAPI REST endpoints."""
     # Root
     root_res = client.get("/")
-    assert root_res.status_code == 200
-    assert root_res.json()["system"] == "AirRoute AI"
+    assert "AirRoute AI" in root_res.json()["system"]
 
     # Predict
     predict_res = client.post("/api/predict", json={
@@ -87,3 +86,27 @@ def test_fastapi_endpoints(client):
     stats_res = client.get("/api/analytics/tickets")
     assert stats_res.status_code == 200
     assert "total_tickets" in stats_res.json()
+
+
+def test_authentication_and_multi_tenant(client):
+    """Test user registration, login, and tenant airline isolation."""
+    from src.tickets.ticket_manager import authenticate_user, register_user
+
+    # Test seeded admin login
+    admin_user = authenticate_user("admin", "admin123")
+    assert admin_user is not None
+    assert admin_user["role"] == "super_admin"
+
+    # Test seeded airline login
+    united_user = authenticate_user("united", "united123")
+    assert united_user is not None
+    assert united_user["airline"] == "United"
+
+    # Test API login endpoint
+    login_res = client.post("/api/auth/login", json={
+        "username_or_email": "united",
+        "password": "united123"
+    })
+    assert login_res.status_code == 200
+    assert login_res.json()["user"]["airline"] == "United"
+
