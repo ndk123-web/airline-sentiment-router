@@ -601,50 +601,16 @@ elif nav_selection == "AI Review Triage & Live Router":
     with col1:
         st.markdown("##### Incoming Passenger Feedback")
 
-        # Curated Operational Scenarios
-        sample_choice = st.selectbox(
-            "Select an operational scenario or input raw passenger feedback:",
-            [
-                "Custom Incident Input",
-                "Compound Disruption: Delayed flight, lost luggage, but great crew",
-                "Urgent Operations: Stranded in Denver snowstorm after 7hr delay",
-                "Ticketing Incident: Double charged for flight booking and website crashed",
-                "Cabin Experience: Broken seat, dirty cabin and no WiFi onboard",
-                "Commendation: Gate agent was extremely helpful and kind during boarding"
-            ]
+        review_input = st.text_area(
+            "Passenger Feedback Statement:",
+            value="",
+            placeholder="Type or paste passenger review here (e.g. My flight was delayed by 3 hours and luggage was lost in Chicago)...",
+            height=140
         )
-
-        sample_texts = {
-            "Compound Disruption: Delayed flight, lost luggage, but great crew": (
-                "@united My flight was delayed by four hours and you lost my baggage in Chicago, but the cabin crew was very polite and helpful!",
-                "United"
-            ),
-            "Urgent Operations: Stranded in Denver snowstorm after 7hr delay": (
-                "@USAirways Cancelled flight without notice and stranded us in Denver snowstorm with no hotel compensation!",
-                "US Airways"
-            ),
-            "Ticketing Incident: Double charged for flight booking and website crashed": (
-                "@Delta I was double charged $320 on my credit card when your website gave an error message during rebooking.",
-                "Delta"
-            ),
-            "Cabin Experience: Broken seat, dirty cabin and no WiFi onboard": (
-                "@SouthwestAir Broken seat and filthy cabin on flight 1102. WiFi didn't work the entire flight.",
-                "Southwest"
-            ),
-            "Commendation: Gate agent was extremely helpful and kind during boarding": (
-                "@VirginAmerica Huge thanks to gate agent Sarah at SFO for fast and polite assistance during boarding!",
-                "Virgin America"
-            )
-        }
-
-        default_text = sample_texts.get(sample_choice, ("Flight delayed 3 hours and lost baggage at transfer.", user_airline))[0]
-        default_airline = sample_texts.get(sample_choice, ("...", user_airline))[1]
-
-        review_input = st.text_area("Passenger Feedback Statement:", value=default_text, height=105)
 
         # Airline Selection
         if is_super_admin:
-            airline_selected = st.selectbox("Target Carrier:", available_airlines + ["Other"], index=0 if default_airline not in available_airlines else available_airlines.index(default_airline))
+            airline_selected = st.selectbox("Target Carrier:", available_airlines + ["Other"], index=0)
         else:
             airline_selected = user_airline
             st.info(f"Target carrier locked to {user_airline} Airlines.")
@@ -655,9 +621,9 @@ elif nav_selection == "AI Review Triage & Live Router":
     with col2:
         st.markdown("##### Immediate Triage Classification")
 
-        if analyze_btn or review_input:
+        if review_input.strip():
             analysis = api_predict_and_route(
-                text=review_input,
+                text=review_input.strip(),
                 airline=airline_selected,
                 create_tickets=(auto_ticket and analyze_btn)
             )
@@ -695,9 +661,16 @@ elif nav_selection == "AI Review Triage & Live Router":
             )
             fig_prob.update_layout(xaxis_range=[0, 1], height=150, margin=dict(t=5, b=5, l=5, r=5), showlegend=False)
             st.plotly_chart(fig_prob, use_container_width=True)
+        else:
+            st.markdown("""
+            <div style="background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 8px; padding: 2.2rem 1.5rem; text-align: center; color: #64748B;">
+                <div style="font-weight: 600; font-size: 0.95rem; color: #334155; margin-bottom: 4px;">Awaiting Passenger Feedback</div>
+                <div style="font-size: 0.85rem;">Enter passenger feedback text on the left to trigger real-time AI sentiment analysis, discourse clause decomposition, and department dispatch.</div>
+            </div>
+            """, unsafe_allow_html=True)
 
     # Detailed Sub-Clause Breakdown
-    if analyze_btn or review_input:
+    if review_input.strip():
         st.markdown("---")
         st.markdown("##### Sub-Clause Decomposition & Department Dispatch Matrix")
 
